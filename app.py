@@ -4,6 +4,26 @@ from logic import LogisticsSystem
 app = Flask(__name__)
 logistics = LogisticsSystem()
 
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(f'database/main.db')
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+        
+def query_db(query, args=(), one=False):
+    db = get_db()
+    cur = db.execute(query, args)
+    rv = cur.fetchall()
+    db.commit()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
 amount_per_delivery = 20
 days_per_delivery = 2
 max_amount_in_warehouse = 1000
