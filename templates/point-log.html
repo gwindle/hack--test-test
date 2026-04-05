@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>LUPA | Вхід менеджеру</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 flex items-center justify-center h-screen font-sans">
+    
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-sm">
+        <h1 class="text-3xl font-extrabold text-indigo-600 mb-1 text-center">LUPA</h1>
+        <h3 class="text-sm font-medium text-slate-500 mb-6 text-center uppercase tracking-wide">Вхід для менеджера точки</h3>
+        
+        <form method="post" action="/login-point" class="flex flex-col gap-4">
+            <select name="point_id" class="p-3 border border-slate-300 rounded-lg text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="{{ val }}">Точка 1</option>
+            </select>
+            
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">
+                Ввійти
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

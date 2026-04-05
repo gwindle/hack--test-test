@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="10">
+    <title>LUPA | Термінал диспетчера</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+
+    <nav class="bg-white shadow-sm border-b py-4 px-8 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-extrabold text-indigo-600">LUPA</h1>
+        </div>
+        <div class="flex items-center gap-6">
+            <h3 class="font-semibold text-slate-700">Панель адміністрування</h3>
+            <a href="/" class="text-sm font-medium text-red-500 hover:text-red-700 transition-colors">Вийти &rarr;</a>
+        </div>
+    </nav>
+    
+    <main class="p-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <div class="space-y-6">
+            
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Глобальні змінні</h2>
+                
+                <form action="/change-amount" class="mb-3 flex justify-between items-center">
+                    <label class="text-sm font-medium text-slate-600">Обсяг машини (од.):</label>
+                    <div class="flex gap-2">
+                        <input name="val" value="{{ amount }}" class="w-16 p-1 border rounded text-center">
+                        <button class="bg-indigo-600 text-white px-2 py-1 rounded text-sm hover:bg-indigo-700">ОК</button>
+                    </div>
+                </form>
+
+                <form action="/change-speed" class="mb-3 flex justify-between items-center">
+                    <label class="text-sm font-medium text-slate-600">Час доставки (дні):</label>
+                    <div class="flex gap-2">
+                        <input name="val" value="{{ days }}" class="w-16 p-1 border rounded text-center">
+                        <button class="bg-indigo-600 text-white px-2 py-1 rounded text-sm hover:bg-indigo-700">ОК</button>
+                    </div>
+                </form>
+
+                <form action="/change-warehouse" class="flex justify-between items-center">
+                    <label class="text-sm font-medium text-slate-600">База складу (од.):</label>
+                    <div class="flex gap-2">
+                        <input name="val" value="{{ warehouse_capacity }}" class="w-16 p-1 border rounded text-center">
+                        <button class="bg-indigo-600 text-white px-2 py-1 rounded text-sm hover:bg-indigo-700">ОК</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Зони покриття складів</h2>
+                <div class="space-y-3">
+                    {% for w in warehouses %}
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <h4 class="font-bold text-indigo-600">Склад {{ w.id }}</h4>
+                        <p class="text-sm text-slate-600 mt-1">Доставка до: <span class="font-medium text-slate-800">{{ w.points }}</span></p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Поставки від постачальника</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {% for deliv in deliveries %}
+                    <div class="p-4 bg-indigo-50 rounded-lg border border-indigo-100">
+                        <h4 class="font-bold text-indigo-800 mb-2">До складу {{ deliv.warehouse_id }}</h4>
+                        <p class="text-sm text-slate-700">Водіїв у рейсі: <span class="font-bold">{{ deliv.drivers }}</span></p>
+                        <p class="text-sm text-slate-700">Товару в дорозі: <span class="font-bold">{{ deliv.amount }} од.</span></p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4">Активні водії на маршрутах ({{ drivers|length }})</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for driver in drivers %}
+                    <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-sm flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded uppercase">Водій #{{ driver.id }}</span>
+                            <p class="text-sm font-medium mt-2">{{ driver.from }} &rarr; {{ driver.to }}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-semibold px-2 py-1 rounded {% if 'Критично' in driver.status %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                                {{ driver.status }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
